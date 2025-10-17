@@ -742,7 +742,7 @@ void vcardproperty_remove_parameter_by_ref(vcardproperty *prop, vcardparameter *
     for (p = pvl_head(prop->parameters); p != 0; p = pvl_next(p)) {
         vcardparameter *p_param = (vcardparameter *)pvl_data(p);
 
-        if (vcardparameter_has_same_name(parameter, p_param)) {
+        if (parameter == p_param) {
             (void)pvl_remove(prop->parameters, p);
             vcardparameter_free(p_param);
             break;
