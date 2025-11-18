@@ -103,6 +103,26 @@ static void test_prop_multivalued(void)
     vcardcomponent_free(card);
 }
 
+static void test_prop_x(void)
+{
+    static const char *input =
+        "BEGIN:VCARD\r\n"
+        "VERSION:3.0\r\n"
+        "X-PROP:foo\r\n"
+        "END:VCARD\r\n";
+
+    vcardcomponent *card = vcardparser_parse_string(input);
+    assert(card != NULL);
+
+    vcardproperty *prop =
+        vcardcomponent_get_first_property(card, VCARD_X_PROPERTY);
+    assert(prop != NULL);
+    assert(VCARD_X_VALUE == vcardvalue_isa(vcardproperty_get_value(prop)));
+    assert_str_equals("X-PROP:foo\r\n", vcardproperty_as_vcard_string(prop));
+
+    vcardcomponent_free(card);
+}
+
 static void test_param_singlevalued(void)
 {
     static const char *input =
@@ -159,6 +179,7 @@ int main(int argc, char **argv)
     test_prop_text();
     test_prop_structured();
     test_prop_multivalued();
+    test_prop_x();
 
     test_param_singlevalued();
     test_param_multivalued();
