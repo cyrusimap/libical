@@ -109,6 +109,7 @@ static void test_prop_x(void)
         "BEGIN:VCARD\r\n"
         "VERSION:3.0\r\n"
         "X-PROP:foo\r\n"
+        "X-PROP:foo;bar\r\n"
         "END:VCARD\r\n";
 
     vcardcomponent *card = vcardparser_parse_string(input);
@@ -119,6 +120,11 @@ static void test_prop_x(void)
     assert(prop != NULL);
     assert(VCARD_X_VALUE == vcardvalue_isa(vcardproperty_get_value(prop)));
     assert_str_equals("X-PROP:foo\r\n", vcardproperty_as_vcard_string(prop));
+
+    prop = vcardcomponent_get_next_property(card, VCARD_X_PROPERTY);
+    assert(prop != NULL);
+    assert(VCARD_X_VALUE == vcardvalue_isa(vcardproperty_get_value(prop)));
+    assert_str_equals("X-PROP:foo;bar\r\n", vcardproperty_as_vcard_string(prop));
 
     vcardcomponent_free(card);
 }

@@ -830,12 +830,7 @@ char *vcardvalue_as_vcard_string_r(const vcardvalue *value)
 
     case VCARD_X_VALUE:
         if (value->x_value != 0) {
-            char *str = NULL;
-            char *str_p;
-            size_t buf_sz;
-
-            return vcardmemory_strdup_and_quote(&str, &str_p, &buf_sz,
-                                                value->x_value, 0);
+            return icalmemory_strdup(value->x_value);
         }
         _fallthrough();
 
