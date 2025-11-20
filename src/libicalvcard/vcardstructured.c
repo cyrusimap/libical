@@ -69,6 +69,7 @@ vcardstructuredtype *vcardstructured_from_string(const char *s)
     }
 
     /* end of value */
+    pos = buf + len;
     icalmemory_append_char(&buf, &pos, &alloc, '\0');
     vcardstrarray_append(field, buf);
 
