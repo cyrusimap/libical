@@ -227,6 +227,47 @@ static void test_value_structured(void)
     vcardvalue_free(val);
 }
 
+static void test_value_structured_from_string(void)
+{
+    vcardstructuredtype *stt;
+
+    // Parse structured value having both fields set.
+    stt = vcardstructured_from_string("foo;bar");
+    assert(stt->num_fields == 2);
+    assert(vcardstrarray_size(stt->field[0]) == 1);
+    assert(vcardstrarray_size(stt->field[1]) == 1);
+    assert_str_equals("foo", vcardstrarray_element_at(stt->field[0], 0));
+    assert_str_equals("bar", vcardstrarray_element_at(stt->field[1], 0));
+    vcardstructured_free(stt);
+
+    // Parse structured value having only first field set.
+    stt = vcardstructured_from_string("foo;");
+    assert(stt->num_fields == 2);
+    assert(vcardstrarray_size(stt->field[0]) == 1);
+    assert(vcardstrarray_size(stt->field[1]) == 1);
+    assert_str_equals("foo", vcardstrarray_element_at(stt->field[0], 0));
+    assert_str_equals("", vcardstrarray_element_at(stt->field[1], 0));
+    vcardstructured_free(stt);
+
+    // Parse structured value having only second field set.
+    stt = vcardstructured_from_string(";foo");
+    assert(stt->num_fields == 2);
+    assert(vcardstrarray_size(stt->field[0]) == 1);
+    assert(vcardstrarray_size(stt->field[1]) == 1);
+    assert_str_equals("", vcardstrarray_element_at(stt->field[0], 0));
+    assert_str_equals("foo", vcardstrarray_element_at(stt->field[1], 0));
+    vcardstructured_free(stt);
+
+    // Parse structured value having no field set.
+    stt = vcardstructured_from_string(";");
+    assert(stt->num_fields == 2);
+    assert(vcardstrarray_size(stt->field[0]) == 1);
+    assert(vcardstrarray_size(stt->field[1]) == 1);
+    assert_str_equals("", vcardstrarray_element_at(stt->field[0], 0));
+    assert_str_equals("", vcardstrarray_element_at(stt->field[1], 0));
+    vcardstructured_free(stt);
+}
+
 int main(int argc, char **argv)
 {
     _unused(argc);
@@ -241,6 +282,7 @@ int main(int argc, char **argv)
     test_param_multivalued();
 
     test_value_structured();
+    test_value_structured_from_string();
 
     return 0;
 }
