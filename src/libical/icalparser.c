@@ -622,7 +622,7 @@ icalcomponent *icalparser_parse(icalparser *parser,
                 /* Badness */
                 icalassert(0);
             }
-        } else {
+        } else if (parser->state == ICALPARSER_ERROR) {
             bad_lines++; // track the number of possibly bogus data lines
         }
         cont = false;
