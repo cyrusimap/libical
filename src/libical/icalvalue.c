@@ -1298,6 +1298,9 @@ char *icalvalue_as_ical_string_r(const icalvalue *value)
         _fallthrough();
 
     default: {
+        if (icalproperty_get_allow_empty_properties()) {
+            return icalmemory_strdup("");
+        }
         return 0;
     }
     }
