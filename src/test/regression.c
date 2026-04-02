@@ -267,7 +267,37 @@ void test_values(void)
 
        if (v!=0) icalvalue_free(v); */
 
+    v = icalvalue_new_color("red");
+    str_is("icalvalue_new_color(red)", icalvalue_get_color(v), "red");
+    icalvalue_set_color(v, "Blue");
+    str_is("icalvalue_set_color(Blue)", icalvalue_get_color(v), "Blue");
+
+    icalvalue_set_color(v, "#abcdef");
+    str_is("icalvalue_set_color(#abcdef)", icalvalue_get_color(v), "#abcdef");
+    icalvalue_set_color(v, "#ABCDEF");
+    str_is("icalvalue_set_color(#ABCDEF)", icalvalue_get_color(v), "#ABCDEF");
+    str_is("icalvalue_as_ical_string()", icalvalue_as_ical_string(v), "#ABCDEF");
+
+    copy = icalvalue_clone(v);
+    str_is("icalvalue_clone()", icalvalue_as_ical_string(copy), "#ABCDEF");
+    icalvalue_free(copy);
+
     icalerror_set_error_state(ICAL_MALFORMEDDATA_ERROR, ICAL_ERROR_NONFATAL);
+
+	/* The following set should fail, leaving the previous value */
+    icalvalue_set_color(v, "Gonk");
+    str_is("icalvalue_set_color(Gonk)", icalvalue_get_color(v), "#ABCDEF");
+    icalvalue_free(v);
+
+    v = icalvalue_new_from_string(ICAL_COLOR_VALUE, "Gonk");
+    ok("illegal color value 'Gonk'", (v == 0));
+    v = icalvalue_new_from_string(ICAL_COLOR_VALUE, "#Gonk");
+    ok("illegal color value '#Gonk'", (v == 0));
+    v = icalvalue_new_from_string(ICAL_COLOR_VALUE, "#00");
+    ok("illegal color value '#00'", (v == 0));
+    v = icalvalue_new_from_string(ICAL_COLOR_VALUE, "#00000000");
+    ok("illegal color value '#00000000'", (v == 0));
+
     v = icalvalue_new_from_string(ICAL_RECUR_VALUE, "D2 #0");
     ok("illegal recur value", (v == 0));
 
